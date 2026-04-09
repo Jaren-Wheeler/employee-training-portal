@@ -6,14 +6,15 @@
     <title>Document</title>
   </head>
   <body>
-    <h1>Create Enrollment</h1>
+    {% extends "training/base.html" %} {% block content %}
+    <h1>Enroll Employee</h1>
 
     <form method="POST">
       {% csrf_token %}
 
       <!-- Employee selection -->
       <label for="employee">Employee:</label>
-      <select name="employee" id="employee">
+      <select class="form-select" name="employee" id="employee">
         {% for e in employees %}
         <option value="{{ e.id }}">{{ e.full_name }}</option>
         {% endfor %}
@@ -21,7 +22,7 @@
 
       <!-- Session selection -->
       <label for="session">Session:</label>
-      <select name="session" id="session">
+      <select class="form-select" name="session" id="session">
         {% for s in sessions %}
         <option value="{{ s.id }}">
           {{ s.course.title }} - {{ s.session_date }}
@@ -31,13 +32,14 @@
 
       <!-- Enrollment status -->
       <label for="status">Status:</label>
-      <select name="status" id="status">
+      <select class="form-select" name="status" id="status">
         <option value="ENROLLED">ENROLLED</option>
         <option value="COMPLETED">COMPLETED</option>
         <option value="CANCELLED">CANCELLED</option>
       </select>
 
-      <button type="submit">Submit</button>
+      <button class="btn btn-primary mt-3" type="submit">Submit</button>
     </form>
+    {% endblock %}
   </body>
 </html>

@@ -25,7 +25,8 @@ def enrollment_list(request):
         enrollments = Enrollment.objects.all()
         
     return render(request, "training/enrollments.html", {
-        "enrollments": enrollments
+        "enrollments": enrollments,
+        "selected_status": status
     })
  
 def create_enrollment(request):
