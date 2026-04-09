@@ -5,15 +5,29 @@ from .models import Enrollment, Employee, Session
 # - Displays form (GET)
 # - Processes submission (POST)
 
+
+# =========================
+# Home
+# =========================
 def home(request):
     return render(request, "training/home.html")
 
+
+# =========================
+# Enrollment Views
+# =========================
 def enrollment_list(request):
-    enrollments = Enrollment.objects.all()
+    status = request.GET.get("status")
+    
+    if status: 
+        enrollments = Enrollment.objects.filter(status=status)
+    else:
+        enrollments = Enrollment.objects.all()
+        
     return render(request, "training/enrollments.html", {
         "enrollments": enrollments
     })
-    
+ 
 def create_enrollment(request):
     # If form is submitted (POST request), process the data
     if request.method == "POST":
