@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    {% extends "training/base.html" %} {% block content %}
+    <h1>Enrollments</h1>
+
+    <form method="GET">
+      <label for="status">Filter by Status:</label>
+      <select class="form-select" name="status" id="status">
+        <option value="">All</option>
+
+        <option
+          value="ENROLLED"
+          {%
+          if
+          selected_status=""
+          ="ENROLLED"
+          %}selected{%
+          endif
+          %}
+        >
+          ENROLLED
+        </option>
+
+        <option
+          value="COMPLETED"
+          {%
+          if
+          selected_status=""
+          ="COMPLETED"
+          %}selected{%
+          endif
+          %}
+        >
+          COMPLETED
+        </option>
+      </select>
+
+      <button class="btn btn-primary mt-3" type="submit">Apply</button>
+    </form>
+
+    <table class="table table-striped">
+      <tr>
+        <th>Employee</th>
+        <th>Course</th>
+        <th>Status</th>
+      </tr>
+
+      {% for e in enrollments %}
+      <tr>
+        <td>{{ e.employee.full_name }}</td>
+        <td>{{ e.session.course.title }}</td>
+        <td>{{ e.status }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <br />
+
+    <a href="{% url 'training:create_enrollments' %}">
+      Create New Enrollment
+    </a>
+    {% endblock %}
+  </body>
+</html>
