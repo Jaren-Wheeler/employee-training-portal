@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    {% extends "training/base.html" %} {% block content %}
+    <h1>Courses</h1>
+
+    <form method="GET">
+      <label for="category">Filter by Category:</label>
+      <select class="form-select" name="category" id="category">
+        <option value="">All</option>
+
+        <option
+          value="Technical"
+          {%
+          if
+          selected_category=""
+          ="Technical"
+          %}selected{%
+          endif
+          %}
+        >
+          Technical
+        </option>
+
+        <option
+          value="Security"
+          {%
+          if
+          selected_category=""
+          ="Security"
+          %}selected{%
+          endif
+          %}
+        >
+          Security
+        </option>
+
+        <option
+          value="Soft Skills"
+          {%
+          if
+          selected_category=""
+          ="Soft Skills"
+          %}selected{%
+          endif
+          %}
+        >
+          Soft Skills
+        </option>
+      </select>
+
+      <button class="btn btn-primary mt-3" type="submit">Apply</button>
+    </form>
+
+    <table class="table table-striped">
+      <tr>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Duration</th>
+      </tr>
+
+      {% for c in training_course %}
+      <tr>
+        <td>{{ c.title }}</td>
+        <td>{{ c.category }}</td>
+        <td>{{ c.duration_minutes }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <br />
+
+    <a href="{% url 'training:create_courses.html' %}">
+      Create New Course
+    </a>
+    {% endblock %}
+  </body>
+</html>

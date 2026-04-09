@@ -23,7 +23,10 @@
           >Home</a
         >
         <a href="#" class="btn btn-outline-primary btn-sm">Employees</a>
-        <a href="#" class="btn btn-outline-primary btn-sm">Courses</a>
+        <a 
+          href="{% url 'training:courses_list' %}"
+          class="btn btn-outline-primary btn-sm"
+          >Courses</a>
         <a href="#" class="btn btn-outline-primary btn-sm">Sessions</a>
         <a
           href="{% url 'training:enrollment_list' %}"
