@@ -80,3 +80,28 @@ def update_status(request, id):
         messages.success(request, "Status updated")
 
     return redirect("training:enrollment_management")
+
+def analytics_dashboard(request):
+    return render(request, "training/analytics.html")
+
+from django.db.models import Count, Q
+
+def course_popularity(request):
+    courses = (
+        Enrollment.objects
+        .values("session__course__title")
+        .annotate(
+            total_enrollments=Count("id"),
+            completed_count=Count("id", filter=Q(status="COMPLETED"))
+        )
+    )
+
+    # calculate success rate
+    for c in courses:
+        total = c["total_enrollments"]
+        completed = c["completed_count"]
+        c["success_rate"] = round((completed / total) * 100, 1) if total > 0 else 0
+
+    return render(request, "training/course_popularity.html", {
+        "courses": courses
+    })
