@@ -2,51 +2,64 @@
 
 {% block content %}
 
-<h1>Enrollments</h1>
+<h2 class="mb-4">Enrollments</h2>
 
-<form method="GET">
-  <label for="status">Filter by Status:</label>
-  <select class="form-select" name="status">
+<!-- FILTER -->
+<form method="GET" class="mb-3">
+  <label class="form-label">Filter by Status:</label>
 
-    <option value="">All</option>
+  <div class="d-flex gap-2">
+    <select class="form-select w-auto" name="status">
+      <option value="">All</option>
 
-    <option value="ENROLLED" {% if selected_status == "ENROLLED" %}selected{% endif %}>
-      ENROLLED
-    </option>
+      <option value="ENROLLED" {% if selected_status == "ENROLLED" %}selected{% endif %}>
+        ENROLLED
+      </option>
 
-    <option value="COMPLETED" {% if selected_status == "COMPLETED" %}selected{% endif %}>
-      COMPLETED
-    </option>
+      <option value="COMPLETED" {% if selected_status == "COMPLETED" %}selected{% endif %}>
+        COMPLETED
+      </option>
 
-    <option value="CANCELLED" {% if selected_status == "CANCELLED" %}selected{% endif %}>
-      CANCELLED
-    </option>
+      <option value="CANCELLED" {% if selected_status == "CANCELLED" %}selected{% endif %}>
+        CANCELLED
+      </option>
+    </select>
 
-  </select>
-
-  <button class="btn btn-primary mt-3">Apply</button>
+    <button class="btn btn-primary" type="submit">Apply</button>
+  </div>
 </form>
 
-<table class="table mt-3">
-  <tr>
-    <th>Employee</th>
-    <th>Course</th>
-    <th>Status</th>
-  </tr>
+<!-- TABLE -->
+ <div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">Enrollments</h2>
 
-  {% for e in enrollments %}
-  <tr>
-    <td>{{ e.employee.full_name }}</td>
-    <td>{{ e.session.course.title }}</td>
-    <td>{{ e.status }}</td>
-  </tr>
-  {% endfor %}
-</table>
+  <a href="{% url 'training:enrollment_management' %}" class="btn btn-secondary">
+    Manage Enrollments
+  </a>
+</div>
+<div style="max-height: 280px; overflow-y: auto;">
+  <table class="table table-striped table-hover table-sm mb-0">
+
+    <thead class="table-light" style="position: sticky; top: 0; z-index: 2;">
+      <tr>
+        <th>Employee</th>
+        <th>Course</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for e in enrollments %}
+      <tr>
+        <td>{{ e.employee.full_name }}</td>
+        <td>{{ e.session.course.title }}</td>
+        <td>{{ e.status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+  </table>
+</div>
 
 <br>
-
-<a href="{% url 'training:enrollment_management' %}" class="btn btn-secondary">
-  Manage Enrollments
-</a>
-
 {% endblock %}

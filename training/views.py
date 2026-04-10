@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Enrollment, Employee, Session 
 from django.db import IntegrityError
+from django.contrib import messages
 
 # Handles creating a new enrollment:
 # - Displays form (GET)
@@ -76,4 +77,6 @@ def update_status(request, id):
         enrollment.status = new_status
         enrollment.save()
 
-    return redirect("training:enrollment_list")
+        messages.success(request, "Status updated")
+
+    return redirect("training:enrollment_management")
