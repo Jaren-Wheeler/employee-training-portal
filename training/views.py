@@ -31,9 +31,10 @@ def enrollment_list(request):
     })
     
 # Enrollment Form View
-def create_enrollment(request):
+def enrollment_management(request):
     employees = Employee.objects.all()
     sessions = Session.objects.all()
+    enrollments = Enrollment.objects.all()
 
     if request.method == "POST":
         employee_id = request.POST.get("employee")
@@ -46,19 +47,11 @@ def create_enrollment(request):
         ).first()
 
         if existing:
-            if existing.status == "COMPLETED":
-                message = "This employee has already completed this session."
-            elif existing.status == "ENROLLED":
-                message = "This employee is already enrolled in this session."
-            elif existing.status == "CANCELLED":
-                message = "This employee already has a cancelled enrollment for this session."
-            else:
-                message = f"This employee already has a {existing.status.lower()} enrollment for this session."
-
-            return render(request, "training/create_enrollment.html", {
+            return render(request, "training/enrollment_management.html", {
                 "employees": employees,
                 "sessions": sessions,
-                "error": message
+                "enrollments": enrollments,
+                "error": "This employee is already enrolled in this session."
             })
 
         Enrollment.objects.create(
@@ -67,11 +60,12 @@ def create_enrollment(request):
             status=status
         )
 
-        return redirect("training:enrollment_list")
+        return redirect("training:enrollment_management")
 
-    return render(request, "training/create_enrollment.html", {
+    return render(request, "training/enrollment_management.html", {
         "employees": employees,
-        "sessions": sessions
+        "sessions": sessions,
+        "enrollments": enrollments
     })
     
 def update_status(request, id):

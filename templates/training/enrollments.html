@@ -1,93 +1,52 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  {% extends "training/base.html" %}
-  <body>
-    {% block content %}
-    <h1>Enrollments</h1>
+{% extends "training/base.html" %}
 
-    <form method="GET">
-      <label for="status">Filter by Status:</label>
-      <select class="form-select" name="status" id="status">
-        <option value="">All</option>
+{% block content %}
 
-        <option
-          value="ENROLLED"
-          {%
-          if
-          selected_status=""
-          ="ENROLLED"
-          %}selected{%
-          endif
-          %}
-        >
-          ENROLLED
-        </option>
+<h1>Enrollments</h1>
 
-        <option
-          value="COMPLETED"
-          {%
-          if
-          selected_status=""
-          ="COMPLETED"
-          %}selected{%
-          endif
-          %}
-        >
-          COMPLETED
-        </option>
-      </select>
+<form method="GET">
+  <label for="status">Filter by Status:</label>
+  <select class="form-select" name="status">
 
-      <button class="btn btn-primary mt-3" type="submit">Apply</button>
-    </form>
+    <option value="">All</option>
 
-    <table class="table">
+    <option value="ENROLLED" {% if selected_status == "ENROLLED" %}selected{% endif %}>
+      ENROLLED
+    </option>
+
+    <option value="COMPLETED" {% if selected_status == "COMPLETED" %}selected{% endif %}>
+      COMPLETED
+    </option>
+
+    <option value="CANCELLED" {% if selected_status == "CANCELLED" %}selected{% endif %}>
+      CANCELLED
+    </option>
+
+  </select>
+
+  <button class="btn btn-primary mt-3">Apply</button>
+</form>
+
+<table class="table mt-3">
   <tr>
     <th>Employee</th>
     <th>Course</th>
     <th>Status</th>
-    <th>Actions</th>
   </tr>
 
   {% for e in enrollments %}
   <tr>
     <td>{{ e.employee.full_name }}</td>
     <td>{{ e.session.course.title }}</td>
-
-    <td>
-      <form method="POST" action="{% url 'training:update_status' e.id %}">
-        {% csrf_token %}
-
-        <select name="status" class="form-select form-select-sm">
-          <option value="ENROLLED" {% if e.status == "ENROLLED" %}selected{% endif %}>
-            ENROLLED
-          </option>
-          <option value="COMPLETED" {% if e.status == "COMPLETED" %}selected{% endif %}>
-            COMPLETED
-          </option>
-          <option value="CANCELLED" {% if e.status == "CANCELLED" %}selected{% endif %}>
-            CANCELLED
-          </option>
-        </select>
-    </td>
-
-    <td>
-        <button class="btn btn-sm btn-success">Update</button>
-      </form>
-    </td>
+    <td>{{ e.status }}</td>
   </tr>
   {% endfor %}
 </table>
 
-    <br />
+<br>
 
-    <a href="{% url 'training:create_enrollments' %}">
-      Create New Enrollment
-    </a>
-    {% endblock %}
-  </body>
-</html>
+<a href="{% url 'training:enrollment_management' %}" class="btn btn-secondary">
+  Manage Enrollments
+</a>
+
+{% endblock %}
