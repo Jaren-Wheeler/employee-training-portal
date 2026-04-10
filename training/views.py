@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Enrollment, Employee, Session 
+from django.db import IntegrityError
 
 # Handles creating a new enrollment:
 # - Displays form (GET)
@@ -28,32 +29,57 @@ def enrollment_list(request):
         "enrollments": enrollments,
         "selected_status": status
     })
- 
+    
+# Enrollment Form View
 def create_enrollment(request):
-    # If form is submitted (POST request), process the data
+    employees = Employee.objects.all()
+    sessions = Session.objects.all()
+
     if request.method == "POST":
         employee_id = request.POST.get("employee")
         session_id = request.POST.get("session")
         status = request.POST.get("status")
 
-        # Create a new Enrollment record in the database
-        # using the selected employee, session, and status
+        existing = Enrollment.objects.filter(
+            employee_id=employee_id,
+            session_id=session_id
+        ).first()
+
+        if existing:
+            if existing.status == "COMPLETED":
+                message = "This employee has already completed this session."
+            elif existing.status == "ENROLLED":
+                message = "This employee is already enrolled in this session."
+            elif existing.status == "CANCELLED":
+                message = "This employee already has a cancelled enrollment for this session."
+            else:
+                message = f"This employee already has a {existing.status.lower()} enrollment for this session."
+
+            return render(request, "training/create_enrollment.html", {
+                "employees": employees,
+                "sessions": sessions,
+                "error": message
+            })
+
         Enrollment.objects.create(
             employee_id=employee_id,
             session_id=session_id,
             status=status
         )
 
-        # After saving, redirect user to the enrollment list page
         return redirect("training:enrollment_list")
 
-    # If page is accessed normally (GET request),
-    # load employees and sessions to populate dropdowns
-    employees = Employee.objects.all()
-    sessions = Session.objects.all()
-
-    # Render the form and pass data to template
     return render(request, "training/create_enrollment.html", {
         "employees": employees,
         "sessions": sessions
     })
+    
+def update_status(request, id):
+    if request.method == "POST":
+        enrollment = Enrollment.objects.get(id=id)
+        new_status = request.POST.get("status")
+
+        enrollment.status = new_status
+        enrollment.save()
+
+    return redirect("training:enrollment_list")

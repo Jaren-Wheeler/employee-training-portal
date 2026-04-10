@@ -1,45 +1,36 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    {% extends "training/base.html" %} {% block content %}
-    <h1>Enroll Employee</h1>
+{% extends "training/base.html" %} {% block content %}
+<h1>Enroll Employee</h1>
 
-    <form method="POST">
-      {% csrf_token %}
+<form method="POST">
+  {% csrf_token %}
 
-      <!-- Employee selection -->
-      <label for="employee">Employee:</label>
-      <select class="form-select" name="employee" id="employee">
-        {% for e in employees %}
-        <option value="{{ e.id }}">{{ e.full_name }}</option>
-        {% endfor %}
-      </select>
+  <label for="employee">Employee:</label>
+  <select class="form-select" name="employee" id="employee">
+    {% for e in employees %}
+    <option value="{{ e.id }}">{{ e.full_name }}</option>
+    {% endfor %}
+  </select>
 
-      <!-- Session selection -->
-      <label for="session">Session:</label>
-      <select class="form-select" name="session" id="session">
-        {% for s in sessions %}
-        <option value="{{ s.id }}">
-          {{ s.course.title }} - {{ s.session_date }}
-        </option>
-        {% endfor %}
-      </select>
+  <label for="session">Session:</label>
+  <select class="form-select" name="session" id="session">
+    {% for s in sessions %}
+    <option value="{{ s.id }}">
+      {{ s.course.title }} - {{ s.session_date }}
+    </option>
+    {% endfor %}
+  </select>
 
-      <!-- Enrollment status -->
-      <label for="status">Status:</label>
-      <select class="form-select" name="status" id="status">
-        <option value="ENROLLED">ENROLLED</option>
-        <option value="COMPLETED">COMPLETED</option>
-        <option value="CANCELLED">CANCELLED</option>
-      </select>
+  <label for="status">Status:</label>
+  <select class="form-select" name="status" id="status">
+    <option value="ENROLLED">ENROLLED</option>
+    <option value="COMPLETED">COMPLETED</option>
+    <option value="CANCELLED">CANCELLED</option>
+  </select>
 
-      <button class="btn btn-primary mt-3" type="submit">Submit</button>
-    </form>
-    {% endblock %}
-  </body>
-</html>
+  {% if error %}
+  <div class="alert alert-danger mt-3">{{ error }}</div>
+  {% endif %}
+
+  <button class="btn btn-primary mt-3" type="submit">Submit</button>
+</form>
+{% endblock %}

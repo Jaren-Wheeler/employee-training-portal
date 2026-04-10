@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
+  {% extends "training/base.html" %}
   <body>
-    {% extends "training/base.html" %} {% block content %}
+    {% block content %}
     <h1>Enrollments</h1>
 
     <form method="GET">
@@ -44,21 +45,43 @@
       <button class="btn btn-primary mt-3" type="submit">Apply</button>
     </form>
 
-    <table class="table table-striped">
-      <tr>
-        <th>Employee</th>
-        <th>Course</th>
-        <th>Status</th>
-      </tr>
+    <table class="table">
+  <tr>
+    <th>Employee</th>
+    <th>Course</th>
+    <th>Status</th>
+    <th>Actions</th>
+  </tr>
 
-      {% for e in enrollments %}
-      <tr>
-        <td>{{ e.employee.full_name }}</td>
-        <td>{{ e.session.course.title }}</td>
-        <td>{{ e.status }}</td>
-      </tr>
-      {% endfor %}
-    </table>
+  {% for e in enrollments %}
+  <tr>
+    <td>{{ e.employee.full_name }}</td>
+    <td>{{ e.session.course.title }}</td>
+
+    <td>
+      <form method="POST" action="{% url 'training:update_status' e.id %}">
+        {% csrf_token %}
+
+        <select name="status" class="form-select form-select-sm">
+          <option value="ENROLLED" {% if e.status == "ENROLLED" %}selected{% endif %}>
+            ENROLLED
+          </option>
+          <option value="COMPLETED" {% if e.status == "COMPLETED" %}selected{% endif %}>
+            COMPLETED
+          </option>
+          <option value="CANCELLED" {% if e.status == "CANCELLED" %}selected{% endif %}>
+            CANCELLED
+          </option>
+        </select>
+    </td>
+
+    <td>
+        <button class="btn btn-sm btn-success">Update</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
 
     <br />
 
