@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Enrollment, Employee, Session 
+from django.db import IntegrityError
+from django.contrib import messages
 
 # Handles creating a new enrollment:
 # - Displays form (GET)
@@ -28,32 +30,78 @@ def enrollment_list(request):
         "enrollments": enrollments,
         "selected_status": status
     })
- 
-def create_enrollment(request):
-    # If form is submitted (POST request), process the data
+    
+# Enrollment Form View
+def enrollment_management(request):
+    employees = Employee.objects.all()
+    sessions = Session.objects.all()
+    enrollments = Enrollment.objects.all()
+
     if request.method == "POST":
         employee_id = request.POST.get("employee")
         session_id = request.POST.get("session")
         status = request.POST.get("status")
 
-        # Create a new Enrollment record in the database
-        # using the selected employee, session, and status
+        existing = Enrollment.objects.filter(
+            employee_id=employee_id,
+            session_id=session_id
+        ).first()
+
+        if existing:
+            return render(request, "training/enrollment_management.html", {
+                "employees": employees,
+                "sessions": sessions,
+                "enrollments": enrollments,
+                "error": "This employee is already enrolled in this session."
+            })
+
         Enrollment.objects.create(
             employee_id=employee_id,
             session_id=session_id,
             status=status
         )
 
-        # After saving, redirect user to the enrollment list page
-        return redirect("training:enrollment_list")
+        return redirect("training:enrollment_management")
 
-    # If page is accessed normally (GET request),
-    # load employees and sessions to populate dropdowns
-    employees = Employee.objects.all()
-    sessions = Session.objects.all()
-
-    # Render the form and pass data to template
-    return render(request, "training/create_enrollment.html", {
+    return render(request, "training/enrollment_management.html", {
         "employees": employees,
-        "sessions": sessions
+        "sessions": sessions,
+        "enrollments": enrollments
+    })
+    
+def update_status(request, id):
+    if request.method == "POST":
+        enrollment = Enrollment.objects.get(id=id)
+        new_status = request.POST.get("status")
+
+        enrollment.status = new_status
+        enrollment.save()
+
+        messages.success(request, "Status updated")
+
+    return redirect("training:enrollment_management")
+
+def analytics_dashboard(request):
+    return render(request, "training/analytics.html")
+
+from django.db.models import Count, Q
+
+def course_popularity(request):
+    courses = (
+        Enrollment.objects
+        .values("session__course__title")
+        .annotate(
+            total_enrollments=Count("id"),
+            completed_count=Count("id", filter=Q(status="COMPLETED"))
+        )
+    )
+
+    # calculate success rate
+    for c in courses:
+        total = c["total_enrollments"]
+        completed = c["completed_count"]
+        c["success_rate"] = round((completed / total) * 100, 1) if total > 0 else 0
+
+    return render(request, "training/course_popularity.html", {
+        "courses": courses
     })

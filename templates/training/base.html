@@ -13,7 +13,7 @@
   <body>
     <div class="container mt-4">
       <!-- HEADER -->
-      <h1 class="text-center mb-4">Employee Training Analytics Portal</h1>
+      <h1 class="text-center mb-4">Employee Training Portal</h1>
 
       <!-- NAV -->
       <nav class="text-center mb-4">
@@ -30,7 +30,12 @@
           class="btn btn-outline-primary btn-sm"
           >Enrollments</a
         >
-        <a href="#" class="btn btn-outline-primary btn-sm">Analytics</a>
+        <a
+          href="{% url 'training:analytics' %}"
+          class="btn btn-outline-primary btn-sm"
+        >
+          Analytics</a
+        >
       </nav>
 
       {% block content %}{% endblock %}
