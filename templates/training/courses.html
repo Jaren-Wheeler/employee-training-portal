@@ -14,42 +14,15 @@
       <select class="form-select" name="category" id="category">
         <option value="">All</option>
 
-        <option
-          value="Technical"
-          {%
-          if
-          selected_category=""
-          ="Technical"
-          %}selected{%
-          endif
-          %}
-        >
+        <option value="TECHNICAL" {% if selected_category == "TECHNICAL" %}selected{% endif %}>
           Technical
         </option>
 
-        <option
-          value="Security"
-          {%
-          if
-          selected_category=""
-          ="Security"
-          %}selected{%
-          endif
-          %}
-        >
+        <option value="SECURITY" {% if selected_category == "SECURITY" %}selected{% endif %}>
           Security
         </option>
 
-        <option
-          value="Soft Skills"
-          {%
-          if
-          selected_category=""
-          ="Soft Skills"
-          %}selected{%
-          endif
-          %}
-        >
+        <option value="SOFT_SKILLS" {% if selected_category == "SOFT_SKILLS" %}selected{% endif %}>
           Soft Skills
         </option>
       </select>
@@ -62,13 +35,30 @@
         <th>Title</th>
         <th>Category</th>
         <th>Duration</th>
+        <th>Actions</th>
       </tr>
 
       {% for c in courses %}
       <tr>
         <td>{{ c.title }}</td>
-        <td>{{ c.category }}</td>
+        <td>{{ c.get_category_display }}</td>
         <td>{{ c.duration_minutes }}</td>
+        <td>
+          <a
+            href="{% url 'training:edit_course' c.id %}"
+            class="btn btn-secondary btn-sm me-2"
+          >
+            Edit
+          </a>
+          <form
+            method="POST"
+            action="{% url 'training:delete_course' c.id %}"
+            class="d-inline"
+          >
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </td>
       </tr>
       {% endfor %}
     </table>

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import Enrollment, Employee, Session, Course
 
 # Handles creating a new enrollment:
@@ -71,7 +71,7 @@ def courses_list(request):
         
     return render(request, "training/courses.html", {
         "courses": courses,
-        "selected_status": category
+        "selected_category": category
     })
 
 def create_courses(request):
@@ -100,3 +100,27 @@ def create_courses(request):
     return render(request, "training/create_courses.html", {
         "courses": courses
     })
+
+
+def edit_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+
+    if request.method == "POST":
+        course.title = request.POST.get("title")
+        course.category = request.POST.get("category")
+        course.duration_minutes = request.POST.get("duration")
+        course.save()
+
+        return redirect("training:courses_list")
+
+    return render(request, "training/edit_course.html", {
+        "course": course
+    })
+
+
+def delete_course(request, course_id):
+    if request.method == "POST":
+        course = get_object_or_404(Course, id=course_id)
+        course.delete()
+
+    return redirect("training:courses_list")
