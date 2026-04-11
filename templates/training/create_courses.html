@@ -1,45 +1,33 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    {% extends "training/base.html" %} {% block content %}
-    <h1>Enroll Employee</h1>
+{% extends "training/base.html" %} {% block content %}
+<h1>Create Course</h1>
 
-    <form method="POST">
-      {% csrf_token %}
+<form method="POST">
+  {% csrf_token %}
 
-      <!-- Employee selection -->
-      <label for="employee">Employee:</label>
-      <select class="form-select" name="employee" id="employee">
-        {% for e in employees %}
-        <option value="{{ e.id }}">{{ e.full_name }}</option>
-        {% endfor %}
-      </select>
+  <div class="mb-3">
+    <label for="title" class="form-label">Title:</label>
+    <input type="text" name="title" id="title" class="form-control" />
+  </div>
 
-      <!-- Session selection -->
-      <label for="session">Session:</label>
-      <select class="form-select" name="session" id="session">
-        {% for s in sessions %}
-        <option value="{{ s.id }}">
-          {{ s.course.title }} - {{ s.session_date }}
-        </option>
-        {% endfor %}
-      </select>
+  <div class="mb-3">
+    <label for="category" class="form-label">Category:</label>
+    <select name="category" id="category" class="form-select">
+      <option value="Technical">Technical</option>
+      <option value="Security">Security</option>
+      <option value="Soft Skills">Soft Skills</option>
+    </select>
+  </div>
 
-      <!-- Enrollment status -->
-      <label for="status">Status:</label>
-      <select class="form-select" name="status" id="status">
-        <option value="ENROLLED">ENROLLED</option>
-        <option value="COMPLETED">COMPLETED</option>
-        <option value="CANCELLED">CANCELLED</option>
-      </select>
+  <div class="mb-3">
+    <label for="duration" class="form-label">Duration (minutes):</label>
+    <input
+      type="number"
+      name="duration"
+      id="duration"
+      class="form-control"
+    />
+  </div>
 
-      <button class="btn btn-primary mt-3" type="submit">Submit</button>
-    </form>
-    {% endblock %}
-  </body>
-</html>
+  <button class="btn btn-primary mt-3" type="submit">Submit</button>
+</form>
+{% endblock %}

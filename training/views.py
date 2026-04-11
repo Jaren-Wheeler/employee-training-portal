@@ -77,28 +77,26 @@ def courses_list(request):
 def create_courses(request):
         # If form is submitted (POST request), process the data
     if request.method == "POST":
-        employee_id = request.POST.get("employee")
-        session_id = request.POST.get("session")
-        status = request.POST.get("status")
+        title = request.POST.get("title")
+        category = request.POST.get("category")
+        duration = request.POST.get("duration")
 
-        # Create a new Enrollment record in the database
-        # using the selected employee, session, and status
-        Enrollment.objects.create(
-            employee_id=employee_id,
-            session_id=session_id,
-            status=status
+        # Create a new Courses record in the database
+        # using the selected title, category, and duration
+        Course.objects.create(
+            title=title,
+            category=category,
+            duration_minutes=duration
         )
 
         # After saving, redirect user to the enrollment list page
-        return redirect("training:enrollment_list")
+        return redirect("training:courses_list")
 
     # If page is accessed normally (GET request),
-    # load employees and sessions to populate dropdowns
-    employees = Employee.objects.all()
-    sessions = Session.objects.all()
+    # load courses to populate dropdowns
+    courses = Course.objects.all()
 
     # Render the form and pass data to template
-    return render(request, "training/create_enrollment.html", {
-        "employees": employees,
-        "sessions": sessions
+    return render(request, "training/create_courses.html", {
+        "courses": courses
     })
