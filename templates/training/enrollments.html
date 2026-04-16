@@ -1,56 +1,54 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    {% extends "training/base.html" %} {% block content %}
-    <h1>Enrollments</h1>
+{% extends "training/base.html" %}
 
-    <form method="GET">
-      <label for="status">Filter by Status:</label>
-      <select class="form-select" name="status" id="status">
-        <option value="">All</option>
+{% block content %}
 
-        <option
-          value="ENROLLED"
-          {%
-          if
-          selected_status=""
-          ="ENROLLED"
-          %}selected{%
-          endif
-          %}
-        >
-          ENROLLED
-        </option>
+<h2 class="mb-4">Enrollments</h2>
 
-        <option
-          value="COMPLETED"
-          {%
-          if
-          selected_status=""
-          ="COMPLETED"
-          %}selected{%
-          endif
-          %}
-        >
-          COMPLETED
-        </option>
-      </select>
+<!-- FILTER -->
+<form method="GET" class="mb-3">
+  <label class="form-label">Filter by Status:</label>
 
-      <button class="btn btn-primary mt-3" type="submit">Apply</button>
-    </form>
+  <div class="d-flex gap-2">
+    <select class="form-select w-auto" name="status">
+      <option value="">All</option>
 
-    <table class="table table-striped">
+      <option value="ENROLLED" {% if selected_status == "ENROLLED" %}selected{% endif %}>
+        ENROLLED
+      </option>
+
+      <option value="COMPLETED" {% if selected_status == "COMPLETED" %}selected{% endif %}>
+        COMPLETED
+      </option>
+
+      <option value="CANCELLED" {% if selected_status == "CANCELLED" %}selected{% endif %}>
+        CANCELLED
+      </option>
+    </select>
+
+    <button class="btn btn-primary" type="submit">Apply</button>
+  </div>
+</form>
+
+<!-- TABLE -->
+ <div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">Enrollments</h2>
+
+  <a href="{% url 'training:enrollment_management' %}" class="btn btn-secondary">
+    Manage Enrollments
+  </a>
+</div>
+<div style="max-height: 280px; overflow-y: auto;">
+  <table class="table table-striped table-hover table-sm mb-0">
+
+    <thead class="table-light" style="position: sticky; top: 0; z-index: 2;">
       <tr>
         <th>Employee</th>
         <th>Course</th>
         <th>Status</th>
       </tr>
+    </thead>
 
+    <tbody>
       {% for e in enrollments %}
       <tr>
         <td>{{ e.employee.full_name }}</td>
@@ -58,13 +56,10 @@
         <td>{{ e.status }}</td>
       </tr>
       {% endfor %}
-    </table>
+    </tbody>
 
-    <br />
+  </table>
+</div>
 
-    <a href="{% url 'training:create_enrollments' %}">
-      Create New Enrollment
-    </a>
-    {% endblock %}
-  </body>
-</html>
+<br>
+{% endblock %}

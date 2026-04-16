@@ -74,9 +74,10 @@ class Enrollment(models.Model):
         related_name="enrollments",
     )
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.ENROLLED)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["employee__full_name", "session__session_date"]
+        ordering = ["-created_at"]
         constraints = [
             models.UniqueConstraint(
                 fields=["employee", "session"],
