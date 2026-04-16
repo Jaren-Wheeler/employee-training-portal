@@ -64,8 +64,13 @@ def create_enrollment(request):
 
 def courses_list(request):
     category = request.GET.get("category")
-    if category: 
-        courses = Course.objects.filter(category=category)
+    if category:
+        normalized_category = category.strip().upper().replace(" ", "_")
+        courses = [
+            course
+            for course in Course.objects.all()
+            if course.category.strip().upper().replace(" ", "_") == normalized_category
+        ]
     else:
         courses = Course.objects.all()
         
