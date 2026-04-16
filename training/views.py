@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from .models import Enrollment, Employee, Session 
+from django.shortcuts import get_object_or_404, render, redirect
+from .models import Enrollment, Employee, Session, Course
 from django.db import IntegrityError
 from django.contrib import messages
 
@@ -105,3 +105,71 @@ def course_popularity(request):
     return render(request, "training/course_popularity.html", {
         "courses": courses
     })
+
+
+# =========================
+# Courses Views
+# =========================
+
+def courses_list(request):
+    category = request.GET.get("category")
+    if category: 
+        courses = Course.objects.filter(category=category)
+    else:
+        courses = Course.objects.all()
+
+    return render(request, "training/courses.html", {
+        "courses": courses,
+        "selected_category": category
+    })
+
+def create_courses(request):
+        # If form is submitted (POST request), process the data
+    if request.method == "POST":
+        title = request.POST.get("title")
+        category = request.POST.get("category")
+        duration = request.POST.get("duration")
+
+        # Create a new Courses record in the database
+        # using the selected title, category, and duration
+        Course.objects.create(
+            title=title,
+            category=category,
+            duration_minutes=duration
+        )
+
+        # After saving, redirect user to the enrollment list page
+        return redirect("training:courses_list")
+
+    # If page is accessed normally (GET request),
+    # load courses to populate dropdowns
+    courses = Course.objects.all()
+
+    # Render the form and pass data to template
+    return render(request, "training/create_courses.html", {
+        "courses": courses
+    })
+
+
+def edit_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+
+    if request.method == "POST":
+        course.title = request.POST.get("title")
+        course.category = request.POST.get("category")
+        course.duration_minutes = request.POST.get("duration")
+        course.save()
+
+        return redirect("training:courses_list")
+
+    return render(request, "training/edit_course.html", {
+        "course": course
+    })
+
+
+def delete_course(request, course_id):
+    if request.method == "POST":
+        course = get_object_or_404(Course, id=course_id)
+        course.delete()
+
+    return redirect("training:courses_list")
