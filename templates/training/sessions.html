@@ -1,0 +1,33 @@
+{% extends "training/base.html" %}
+
+{% block content %}
+<h1>Training Sessions</h1>
+<table class="table table-striped">
+    <tr>
+        <th>Course</th>
+        <th>Date</th>
+        <th>Instructor</th>
+        <th>Mode</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for session in sessions %}
+    <tr>
+        <td>{{ session.course.title }}</td>
+        <td>{{ session.session_date }}</td>
+        <td>{{ session.instructor_name }}</td>
+        <td>{{ session.get_mode_display }}</td>
+        <td>
+            <a href="{% url 'training:update_session' session.id %}">Edit</a> |
+            <a href="{% url 'training:delete_session' session.id %}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+
+<a href="{% url 'training:create_session' %}">
+     [ Schedule Session ]
+</a>
+{% endblock %}

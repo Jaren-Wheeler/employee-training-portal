@@ -1,0 +1,54 @@
+{% extends "training/base.html" %}
+
+{% block content %}
+<h1>Schedule New Session</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% endif %}
+
+    <label>Course:</label>
+        <select name="course">
+            {% for course in courses %}
+            <option value="{{ course.id}}"
+                {% if session and course.id == session.course.id %} selected {% endif %}>
+            {{ course.title }}</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label>Date:</label>
+        <input type="date" name="session_date" value="{{ session.session_date|default:''}}">
+
+        <br><br>
+
+        <label>Instructor:</label>
+        <input type="text" name="instructor_name" value="{{ session.instructor_name|default:''}}">
+
+        <br><br>
+
+        <label>Mode:</label>
+        <select name="mode">
+            <option value="ONLINE"
+                {% if session and session.mode == 'ONLINE' %} selected {% endif %}>
+                Online
+            </option>
+            <option value="IN_PERSON" 
+                {% if session and session.mode == 'IN_PERSON' %} selected {% endif %}>
+                In-Person
+        </option>
+        </select>
+
+        <br><br>
+
+        <button type ="submit">Save</button>
+    </form>
+{% endblock %}

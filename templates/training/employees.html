@@ -1,0 +1,86 @@
+{% extends "training/base.html" %} {% block content %}
+<h1>Employees</h1>
+
+<form id="department-filter-form" class="mb-3">
+  <label for="department">Filter by Department:</label>
+  <select class="form-select" name="department" id="department">
+    <option value="">All</option>
+
+    <option value="IT" {% if selected_department == "IT" %}selected{% endif %}>
+      IT
+    </option>
+
+    <option value="SALES" {% if selected_department == "SALES" %}selected{% endif %}>
+      Sales
+    </option>
+
+    <option value="HR" {% if selected_department == "HR" %}selected{% endif %}>
+      HR
+    </option>
+  </select>
+
+  <button class="btn btn-primary mt-3" type="submit">Apply</button>
+</form>
+
+<table class="table table-striped">
+  <tr>
+    <th>Full Name</th>
+    <th>Email</th>
+    <th>Department</th>
+    <th>Actions</th>
+  </tr>
+
+  {% for e in employees %}
+  <tr class="employee-row" data-department="{{ e.department}}">
+    <td>{{ e.full_name }}</td>
+    <td>{{ e.email }}</td>
+    <td>{{ e.department }}</td>
+    <td>
+      <a
+        href="{% url 'training:edit_employee' e.id %}"
+        class="btn btn-secondary btn-sm me-2"
+      >
+        Edit
+      </a>
+      <form
+        method="POST"
+        action="{% url 'training:delete_employee' e.id %}"
+        class="d-inline"
+      >
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<br />
+
+<a href="{% url 'training:create_employee.html' %}"> Create New Employee </a>
+
+<script>
+  const filterForm = document.getElementById("category-filter-form");
+  const categorySelect = document.getElementById("category");
+  const courseRows = document.querySelectorAll(".course-row");
+
+  function applyCategoryFilter() {
+    const selectedCategory = categorySelect.value;
+
+    courseRows.forEach((row) => {
+      if (!selectedCategory || row.dataset.category === selectedCategory) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  }
+
+  filterForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    applyCategoryFilter();
+  });
+
+  applyCategoryFilter();
+</script>
+{% endblock %}

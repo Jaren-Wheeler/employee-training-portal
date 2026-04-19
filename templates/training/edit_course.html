@@ -1,0 +1,49 @@
+{% extends "training/base.html" %} {% block content %}
+<h1>Edit Course</h1>
+
+<form method="POST">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label for="title" class="form-label">Title:</label>
+    <input
+      type="text"
+      name="title"
+      id="title"
+      class="form-control"
+      value="{{ course.title }}"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="category" class="form-label">Category:</label>
+    <select name="category" id="category" class="form-select">
+      <option value="TECHNICAL" {% if course.category == "TECHNICAL" %}selected{% endif %}>
+        Technical
+      </option>
+      <option value="SECURITY" {% if course.category == "SECURITY" %}selected{% endif %}>
+        Security
+      </option>
+      <option value="SOFT_SKILLS" {% if course.category == "SOFT_SKILLS" %}selected{% endif %}>
+        Soft Skills
+      </option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="duration" class="form-label">Duration (minutes):</label>
+    <input
+      type="number"
+      name="duration"
+      id="duration"
+      class="form-control"
+      value="{{ course.duration_minutes }}"
+    />
+  </div>
+
+  <button class="btn btn-primary mt-3" type="submit">Save Changes</button>
+  <a href="{% url 'training:courses_list' %}" class="btn btn-outline-secondary mt-3"
+    >Cancel</a
+  >
+</form>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "training/base.html" %} {% block content %}
+<h1>Create Course</h1>
+
+<form method="POST">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label for="title" class="form-label">Title:</label>
+    <input type="text" name="title" id="title" class="form-control" />
+  </div>
+
+  <div class="mb-3">
+    <label for="category" class="form-label">Category:</label>
+    <select name="category" id="category" class="form-select">
+      <option value="TECHNICAL">Technical</option>
+      <option value="SECURITY">Security</option>
+      <option value="SOFT_SKILLS">Soft Skills</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="duration" class="form-label">Duration (minutes):</label>
+    <input
+      type="number"
+      name="duration"
+      id="duration"
+      class="form-control"
+    />
+  </div>
+
+  <button class="btn btn-primary mt-3" type="submit">Submit</button>
+</form>
+{% endblock %}

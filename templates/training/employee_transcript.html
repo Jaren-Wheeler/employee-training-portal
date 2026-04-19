@@ -1,0 +1,47 @@
+{% extends "training/base.html" %}
+
+{% block content %}
+<h1>Employee Transcript</h1>
+
+<form method="get">
+    <label>Select Employee:</label>
+    <select name="employee">
+        <option value="">Select Employee</option>
+        {% for emp in employees %}
+            <option value="{{ emp.id }}"
+            {% if selected_employee and emp.id == selected_employee.id %}selected{% endif %}>
+            {{ emp.full_name }} {{ emp.email}}
+        </option>
+    {% endfor %}
+    </select>
+
+    <button type ="submit">View Transcript</button>
+</form>
+
+<hr>
+{% if selected_employee %}
+    <h3>Employee: {{ selected_employee.full_name }}</h3>
+    <p>Department: {{ selected_employee.department }}</p>
+
+    <table class="table table-striped">
+        <tr>
+            <th>Date</th>
+            <th>Course</th>
+            <th>Status</th>
+        </tr>
+
+        {% for e in enrollments %}
+        <tr>
+            <td>{{ e.session.session_date }}</td>
+            <td> {{ e.session.course.title }}</td>
+            <td>{{ e.status }}</td>
+        </tr>
+        {% empty%}
+        <tr>
+            <td colspan="3">No training sessions found for this employee.</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endif %}
+{% endblock %}
