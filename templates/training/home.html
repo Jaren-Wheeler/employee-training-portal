@@ -1,16 +1,77 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Employee Training Analytics Portal</title>
-  </head>
-  {% extends "training/base.html" %} {% block content %}
-  <body>
-    <p>
-      Django project scaffold is set up and ready for CRUD pages, filters, and
-      analytics.
-    </p>
-  </body>
-  {% endblock %}
-</html>
+{% extends "training/base.html" %} {% block header %}
+<!-- no header/nav on home -->
+{% endblock %} {% block content %}
+
+<div class="text-center mb-5">
+  <h1 class="mb-3">Employee Training Portal</h1>
+  <p class="text-muted">
+    Manage employee training, track enrollments, and view analytics reports.
+  </p>
+</div>
+
+<div class="row g-4">
+  <!-- Employees -->
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body text-center">
+        <h5 class="card-title">Employees</h5>
+        <p class="text-muted">Manage employee records and departments.</p>
+        <a href="{% url 'training:employees_list' %}" class="btn btn-primary">
+          View Employees
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Courses -->
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body text-center">
+        <h5 class="card-title">Courses</h5>
+        <p class="text-muted">Create and manage training courses.</p>
+        <a href="{% url 'training:courses_list' %}" class="btn btn-primary">
+          View Courses
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sessions -->
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body text-center">
+        <h5 class="card-title">Sessions</h5>
+        <p class="text-muted">Schedule training sessions.</p>
+        <a href="#" class="btn btn-primary"> View Sessions </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enrollments -->
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body text-center">
+        <h5 class="card-title">Enrollments</h5>
+        <p class="text-muted">Enroll employees and track status.</p>
+        <a href="{% url 'training:enrollment_list' %}" class="btn btn-primary">
+          View Enrollments
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics -->
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body text-center">
+        <h5 class="card-title">Analytics</h5>
+        <p class="text-muted">View training insights and reports.</p>
+        <a href="{% url 'training:analytics' %}" class="btn btn-primary">
+          View Analytics
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

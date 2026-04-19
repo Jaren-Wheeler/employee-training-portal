@@ -1,6 +1,4 @@
-{% extends "training/base.html" %}
-
-{% block content %}
+{% extends "training/base.html" %} {% block content %}
 
 <h2 class="mb-4">Course Popularity</h2>
 
@@ -9,14 +7,14 @@
     <tr>
       <th>Course Title</th>
       <th>Total Enrollments</th>
-      <th>Success Rate </th>
+      <th>Success Rate</th>
     </tr>
   </thead>
 
   <tbody>
     {% for c in courses %}
     <tr>
-      <td>{{ c.session__course__title }}</td>
+      <td>{{ c.title }}</td>
       <td>{{ c.total_enrollments }}</td>
       <td>{{ c.success_rate }}%</td>
     </tr>
