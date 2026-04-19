@@ -1,50 +1,69 @@
-{% extends "training/base.html" %} {% block content %}
-<h1>Edit Employee</h1>
+{% extends "training/base.html" %}
 
-<form method="POST">
-  {% csrf_token %}
+{% block content %}
 
-  <div class="mb-3">
-    <label for="title" class="form-label">Full Name:</label>
-    <input
-      type="text"
-      name="full_name"
-      id="full_name"
-      class="form-control"
-      value="{{ employee.full_name }}"
-    />
-  </div>
+<h2 class="mb-4">Edit Employee</h2>
 
-  <div class="mb-3">
-    <label for="email" class="form-label">email:</label>
-    <input
-      type="email"
-      name="email"
-      id="email"
-      class="form-control"
-      value="{{ employee.email }}"
-    />
-  </div>
+<div class="card p-4 shadow-sm">
 
-  <div class="mb-3">
-    <label for="department" class="form-label">Department:</label>
-    <select name="department" id="department" class="form-select">
-      <option value="IT" {% if employee.department == "IT" %}selected{% endif %}>
-        IT
-      </option>
-      <option value="SALES" {% if employee.department == "SALES" %}selected{% endif %}>
-        Sales
-      </option>
-      <option value="HR" {% if employee.department == "HR" %}selected{% endif %}>
-        HR
-      </option>
-    </select>
-  </div>
+  <form method="POST">
+    {% csrf_token %}
 
+    <!-- Full Name -->
+    <div class="mb-3">
+      <label for="full_name" class="form-label">Full Name</label>
+      <input
+        type="text"
+        name="full_name"
+        id="full_name"
+        class="form-control"
+        value="{{ employee.full_name }}"
+        required
+      />
+    </div>
 
-  <button class="btn btn-primary mt-3" type="submit">Save Changes</button>
-  <a href="{% url 'training:employees_list' %}" class="btn btn-outline-secondary mt-3"
-    >Cancel</a
-  >
-</form>
+    <!-- Email -->
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input
+        type="email"
+        name="email"
+        id="email"
+        class="form-control"
+        value="{{ employee.email }}"
+        required
+      />
+    </div>
+
+    <!-- Department -->
+    <div class="mb-3">
+      <label for="department" class="form-label">Department</label>
+      <select name="department" id="department" class="form-select" required>
+        <option value="IT" {% if employee.department == "IT" %}selected{% endif %}>
+          IT
+        </option>
+        <option value="SALES" {% if employee.department == "SALES" %}selected{% endif %}>
+          Sales
+        </option>
+        <option value="HR" {% if employee.department == "HR" %}selected{% endif %}>
+          HR
+        </option>
+      </select>
+    </div>
+
+    <!-- Buttons -->
+    <div class="d-flex justify-content-end gap-2 mt-3">
+      <a href="{% url 'training:employees_list' %}" class="btn btn-outline-secondary">
+        Cancel
+      </a>
+
+      <button class="btn btn-primary" type="submit">
+        Save Changes
+      </button>
+    </div>
+
+  </form>
+
+</div>
+
 {% endblock %}

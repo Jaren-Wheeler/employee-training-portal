@@ -15,11 +15,17 @@ urlpatterns = [
     path("analytics/course-popularity/", views.course_popularity, name="course_popularity"),
     path("analytics/department-participation/", views.department_participation, name="department_participation"),
     path("analytics/enrollments-per-session/", views.enrollments_per_session, name="enrollments_per_session"),
+    path("analytics/transcript/", views.employee_transcript, name="employee_transcript"),
 
     path("courses/", views.courses_list, name="courses_list"),
     path("courses/create", views.create_courses, name="create_courses.html"),
     path("courses/<int:course_id>/edit", views.edit_course, name="edit_course"),
     path("courses/<int:course_id>/delete", views.delete_course, name="delete_course"),
+    
+    path("sessions/", views.sessions_list, name="sessions_list"),
+    path("sessions/add/", views.create_session, name="create_session"),
+    path("sessions/edit/<int:id>/", views.update_session, name="update_session"),
+    path("sessions/delete/<int:id>/", views.delete_session, name="delete_session"),
 
     path("employees/", views.employees_list, name="employees_list"),
     path("employees/create", views.create_employee, name="create_employee.html"),

@@ -254,6 +254,63 @@ def course_popularity(request):
         "courses": courses
     })
 
+# =========================
+# Sessions Views
+# =========================
+
+def sessions_list(request):
+    sessions = Session.objects.all()
+    return render(request, "training/sessions.html", {
+        "sessions": sessions
+    })
+    
+def create_session(request):
+    if request.method == "POST":
+        course_id = request.POST.get("course")
+        date = request.POST.get("session_date")
+        instructor = request.POST.get("instructor_name")
+        mode = request.POST.get("mode")
+
+        if not course_id or not date or not instructor or not mode:
+            messages.error(request, "All fields are required.")
+            return render(request, "training/create_session.html", {
+                "courses": Course.objects.all()
+            })
+
+        Session.objects.create(
+            course_id=course_id,
+            session_date=date,
+            instructor_name=instructor,
+            mode=mode
+        )
+
+        return redirect("training:sessions_list")  # ✅ FIXED
+
+    return render(request, "training/create_session.html", {
+        "courses": Course.objects.all()
+    })
+
+def update_session(request, id):
+    session = Session.objects.get(id=id)
+
+    if request.method == "POST":
+        session.course_id = request.POST.get("course")
+        session.session_date = request.POST.get("session_date")
+        session.instructor_name = request.POST.get("instructor_name")
+        session.mode = request.POST.get("mode")
+        session.save()
+
+        return redirect("training:sessions_list")
+
+    return render(request, "training/create_session.html", {
+        "session": session,
+        "courses": Course.objects.all()
+    })
+    
+def delete_session(request, id):
+    session = Session.objects.get(id=id)
+    session.delete()
+    return redirect("training:sessions_list")
 
 # =========================
 # Analytics Views
@@ -322,4 +379,30 @@ def enrollments_per_session(request):
 
     return render(request, "training/enrollments_per_session.html", {
         "sessions": sessions
+    })
+    
+# -------------------------
+# Employee Report
+# -------------------------
+def employee_transcript(request):
+    employees = Employee.objects.all()
+    employee_id = request.GET.get("employee")
+
+    selected_employee = None
+    enrollments = Enrollment.objects.none()
+
+    if employee_id:
+        selected_employee = get_object_or_404(Employee, id=employee_id)
+
+        enrollments = (
+            Enrollment.objects
+            .filter(employee_id=employee_id)
+            .select_related("session", "session__course")
+            .order_by("-created_at")
+        )
+
+    return render(request, "training/employee_transcript.html", {
+        "employees": employees,
+        "selected_employee": selected_employee,
+        "enrollments": enrollments
     })
