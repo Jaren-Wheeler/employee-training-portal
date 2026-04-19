@@ -87,32 +87,6 @@ def update_status(request, id):
 
     return redirect("training:enrollment_management")
 
-def analytics_dashboard(request):
-    return render(request, "training/analytics.html")
-
-def course_popularity(request):
-    courses = list(
-        Course.objects
-        .annotate(
-            total_enrollments=Count("sessions__enrollments"),
-            completed_enrollments=Count(
-                "sessions__enrollments",
-                filter=Q(sessions__enrollments__status=Enrollment.Status.COMPLETED),
-            ),
-        )
-        .order_by("-total_enrollments", "title")
-    )
-
-    for course in courses:
-        total = course.total_enrollments
-        completed = course.completed_enrollments
-        course.success_rate = round((completed / total) * 100, 1) if total > 0 else 0
-
-    return render(request, "training/course_popularity.html", {
-        "courses": courses
-    })
-
-
 # =========================
 # Courses Views
 # =========================
@@ -246,3 +220,92 @@ def delete_employee(request, employee_id):
         course.delete()
 
     return redirect("training:employees_list")
+
+# =========================
+# Analytics Views
+# =========================
+
+def analytics_dashboard(request):
+    return render(request, "training/analytics.html")
+
+
+# -------------------------
+# Course Popularity
+# -------------------------
+def course_popularity(request):
+    courses = list(
+        Course.objects
+        .annotate(
+            total_enrollments=Count("sessions__enrollments"),
+            completed_enrollments=Count(
+                "sessions__enrollments",
+                filter=Q(sessions__enrollments__status=Enrollment.Status.COMPLETED),
+            ),
+        )
+        .order_by("-total_enrollments", "title")
+    )
+
+    for course in courses:
+        total = course.total_enrollments
+        completed = course.completed_enrollments
+        course.success_rate = round((completed / total) * 100, 1) if total > 0 else 0
+
+    return render(request, "training/course_popularity.html", {
+        "courses": courses
+    })
+
+
+# =========================
+# Analytics Views
+# =========================
+
+def analytics_dashboard(request):
+    return render(request, "training/analytics.html")
+
+
+# -------------------------
+# Course Popularity
+# -------------------------
+def course_popularity(request):
+    courses = list(
+        Course.objects
+        .annotate(
+            total_enrollments=Count("sessions__enrollments"),
+            completed_enrollments=Count(
+                "sessions__enrollments",
+                filter=Q(sessions__enrollments__status=Enrollment.Status.COMPLETED),
+            ),
+        )
+        .order_by("-total_enrollments", "title")
+    )
+
+    for course in courses:
+        total = course.total_enrollments
+        completed = course.completed_enrollments
+        course.success_rate = round((completed / total) * 100, 1) if total > 0 else 0
+
+    return render(request, "training/course_popularity.html", {
+        "courses": courses
+    })
+
+
+# -------------------------
+# Department Participation
+# -------------------------
+def department_participation(request):
+    departments = (
+        Employee.objects
+        .values("department")
+        .annotate(
+            total_enrollments=Count("enrollments"),
+            completed_count=Count(
+                "enrollments",
+                filter=Q(enrollments__status=Enrollment.Status.COMPLETED)
+            )
+        )
+        .order_by("-completed_count")
+    )
+
+    return render(request, "training/department_participation.html", {
+        "departments": departments
+    })
