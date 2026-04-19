@@ -1,6 +1,8 @@
 {% extends "training/base.html" %} {% block content %}
 
-<h2 class="mb-4">Schedule New Session</h2>
+<h2 class="mb-4">
+  {% if session %} Edit Session {% else %} Schedule New Session {% endif %}
+</h2>
 
 <div class="card p-4 shadow-sm">
   {% if messages %} {% for message in messages %}
@@ -103,7 +105,9 @@
         Cancel
       </a>
 
-      <button type="submit" class="btn btn-primary">Save Session</button>
+      <button type="submit" class="btn btn-primary">
+        {% if session %} Update Session {% else %} Save Session {% endif %}
+      </button>
     </div>
   </form>
 </div>
