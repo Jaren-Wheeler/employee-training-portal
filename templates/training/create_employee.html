@@ -1,0 +1,30 @@
+{% extends "training/base.html" %} {% block content %}
+<h1>Create Employee</h1>
+
+<form method="POST">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label for="full_name" class="form-label">Full Name:</label>
+    <input type="text" name="full_name" id="full_name" class="form-control" />
+  </div>
+
+  <div class="mb-3">
+    <label for="email" class="form-label">Email:</label>
+    <input type="email" name="email" id="email" class="form-control" />
+  </div>
+
+  <div class="mb-3">
+    <label for="department" class="form-label">Department:</label>
+    <select name="department" id="department" class="form-select">
+      <option value="IT">IT</option>
+      <option value="SALES">Sales</option>
+      <option value="HR">HR</option>
+    </select>
+  </div>
+
+  
+
+  <button class="btn btn-primary mt-3" type="submit">Submit</button>
+</form>
+{% endblock %}
