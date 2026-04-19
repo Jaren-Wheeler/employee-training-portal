@@ -1,33 +1,64 @@
-{% extends "training/base.html" %} {% block content %}
-<h1>Create Course</h1>
+{% extends "training/base.html" %}
 
-<form method="POST">
-  {% csrf_token %}
+{% block content %}
 
-  <div class="mb-3">
-    <label for="title" class="form-label">Title:</label>
-    <input type="text" name="title" id="title" class="form-control" />
-  </div>
+<h2 class="mb-4">Create Course</h2>
 
-  <div class="mb-3">
-    <label for="category" class="form-label">Category:</label>
-    <select name="category" id="category" class="form-select">
-      <option value="TECHNICAL">Technical</option>
-      <option value="SECURITY">Security</option>
-      <option value="SOFT_SKILLS">Soft Skills</option>
-    </select>
-  </div>
+<div class="card p-4 shadow-sm">
 
-  <div class="mb-3">
-    <label for="duration" class="form-label">Duration (minutes):</label>
-    <input
-      type="number"
-      name="duration"
-      id="duration"
-      class="form-control"
-    />
-  </div>
+  <form method="POST">
+    {% csrf_token %}
 
-  <button class="btn btn-primary mt-3" type="submit">Submit</button>
-</form>
+    <!-- Title -->
+    <div class="mb-3">
+      <label for="title" class="form-label">Course Title</label>
+      <input
+        type="text"
+        name="title"
+        id="title"
+        class="form-control"
+        placeholder="Enter course title"
+        required
+      />
+    </div>
+
+    <!-- Category -->
+    <div class="mb-3">
+      <label for="category" class="form-label">Category</label>
+      <select name="category" id="category" class="form-select" required>
+        <option value="TECHNICAL">Technical</option>
+        <option value="SECURITY">Security</option>
+        <option value="SOFT_SKILLS">Soft Skills</option>
+      </select>
+    </div>
+
+    <!-- Duration -->
+    <div class="mb-3">
+      <label for="duration" class="form-label">Duration (minutes)</label>
+      <input
+        type="number"
+        name="duration"
+        id="duration"
+        class="form-control"
+        placeholder="e.g. 60"
+        min="1"
+        required
+      />
+    </div>
+
+    <!-- Buttons -->
+    <div class="d-flex justify-content-end gap-2 mt-3">
+      <a href="{% url 'training:courses_list' %}" class="btn btn-outline-secondary">
+        Cancel
+      </a>
+
+      <button class="btn btn-primary" type="submit">
+        Create Course
+      </button>
+    </div>
+
+  </form>
+
+</div>
+
 {% endblock %}

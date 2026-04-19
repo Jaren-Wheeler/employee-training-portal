@@ -1,36 +1,76 @@
 {% extends "training/base.html" %} {% block content %}
-<h1>Courses</h1>
 
-<form id="category-filter-form" class="mb-3">
-  <label for="category">Filter by Category:</label>
-  <select class="form-select" name="category" id="category">
-    <option value="">All</option>
+<h2 class="mb-4">Courses</h2>
 
-    <option value="TECHNICAL" {% if selected_category == "TECHNICAL" %}selected{% endif %}>
-      Technical
-    </option>
+<!-- FILTER -->
+<form method="GET" class="mb-3">
+  <div class="d-flex gap-2">
+    <label for="category" class="form-label">Filter by Category:</label>
+    <select id="category" class="form-select w-auto" name="category">
+      <option value="">All</option>
 
-    <option value="SECURITY" {% if selected_category == "SECURITY" %}selected{% endif %}>
-      Security
-    </option>
+      <option
+        value="TECHNICAL"
+        {%
+        if
+        selected_category=""
+        ="TECHNICAL"
+        %}selected{%
+        endif
+        %}
+      >
+        Technical
+      </option>
 
-    <option value="SOFT_SKILLS" {% if selected_category == "SOFT_SKILLS" %}selected{% endif %}>
-      Soft Skills
-    </option>
-  </select>
+      <option
+        value="SECURITY"
+        {%
+        if
+        selected_category=""
+        ="SECURITY"
+        %}selected{%
+        endif
+        %}
+      >
+        Security
+      </option>
 
-  <button class="btn btn-primary mt-3" type="submit">Apply</button>
+      <option
+        value="SOFT_SKILLS"
+        {%
+        if
+        selected_category=""
+        ="SOFT_SKILLS"
+        %}selected{%
+        endif
+        %}
+      >
+        Soft Skills
+      </option>
+    </select>
+
+    <button type="submit" class="btn btn-primary">Apply</button>
+  </div>
 </form>
 
-<div style="max-height: 280px; overflow-y: auto;">
-  <table class="table table-striped table-hover table-sm mb-0">
+<!-- HEADER + ACTION -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">All Courses</h5>
 
-    <thead class="table-light" style="position: sticky; top: 0; z-index: 2;">
+  <a href="{% url 'training:create_courses.html' %}" class="btn btn-secondary">
+    Create Course
+  </a>
+</div>
+
+<!-- TABLE -->
+<div style="max-height: 280px; overflow-y: auto">
+  <table class="table table-striped table-hover table-sm mb-0">
+    <thead class="table-light" style="position: sticky; top: 0; z-index: 2">
       <tr>
         <th>Title</th>
         <th>Category</th>
         <th>Duration</th>
-        <th>Actions</th>
+        <th class="text-end">Actions</th>
       </tr>
     </thead>
 
@@ -40,50 +80,33 @@
         <td>{{ c.title }}</td>
         <td>{{ c.get_category_display }}</td>
         <td>{{ c.duration_minutes }}</td>
-        <td>
-          <a href="{% url 'training:edit_course' c.id %}"
-             class="btn btn-secondary btn-sm me-2">Edit</a>
+        <td class="text-end">
+          <a
+            href="{% url 'training:edit_course' c.id %}"
+            class="btn btn-sm btn-outline-secondary me-1"
+          >
+            Edit
+          </a>
 
-          <form method="POST"
-                action="{% url 'training:delete_course' c.id %}"
-                class="d-inline">
+          <form
+            method="POST"
+            action="{% url 'training:delete_course' c.id %}"
+            class="d-inline"
+          >
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            <button type="submit" class="btn btn-sm btn-outline-danger">
+              Delete
+            </button>
           </form>
         </td>
       </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center text-muted">No courses found.</td>
+      </tr>
       {% endfor %}
     </tbody>
-
   </table>
 </div>
 
-<br />
-
-<a href="{% url 'training:create_courses.html' %}"> Create New Course </a>
-
-<!-- <script>
-  const filterForm = document.getElementById("category-filter-form");
-  const categorySelect = document.getElementById("category");
-  const courseRows = document.querySelectorAll(".course-row");
-
-  function applyCategoryFilter() {
-    const selectedCategory = categorySelect.value;
-
-    courseRows.forEach((row) => {
-      if (!selectedCategory || row.dataset.category === selectedCategory) {
-        row.style.display = "";
-      } else {
-        row.style.display = "none";
-      }
-    });
-  }
-
-  filterForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    applyCategoryFilter();
-  });
-
-  applyCategoryFilter();
-</script> -->
 {% endblock %}
