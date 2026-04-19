@@ -1,0 +1,33 @@
+{% extends "training/base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">Department Participation</h2>
+
+<table class="table table-striped table-hover table-sm">
+  <thead class="table-light">
+    <tr>
+      <th>Department</th>
+      <th>Total Enrollments</th>
+      <th>Completed Trainings</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for d in departments %}
+    <tr>
+      <td>{{ d.department|title }}</td>
+      <td>{{ d.total_enrollments }}</td>
+      <td>{{ d.completed_count }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3" class="text-center text-muted">
+        No data available
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
