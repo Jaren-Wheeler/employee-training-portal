@@ -4,30 +4,58 @@
 
 <h2 class="mb-4">Enrollments</h2>
 
-<!-- FILTER -->
-<form method="GET" class="mb-3">
-  <label class="form-label">Filter by Status:</label>
+<!-- Filter section -->
+<form method="GET" class="d-flex gap-5 mb-3">
+  <div>
+    <label class="form-label">Filter by Status:</label>
 
-  <div class="d-flex gap-2">
-    <select class="form-select w-auto" name="status">
-      <option value="">All</option>
+    <div class="d-flex gap-2">
+      <select class="form-select w-auto" name="status">
+        <option value="">All</option>
 
-      <option value="ENROLLED" {% if selected_status == "ENROLLED" %}selected{% endif %}>
-        ENROLLED
-      </option>
+        <option value="ENROLLED" {% if selected_status == "ENROLLED" %}selected{% endif %}>
+          ENROLLED
+        </option>
 
-      <option value="COMPLETED" {% if selected_status == "COMPLETED" %}selected{% endif %}>
-        COMPLETED
-      </option>
+        <option value="COMPLETED" {% if selected_status == "COMPLETED" %}selected{% endif %}>
+          COMPLETED
+        </option>
 
-      <option value="CANCELLED" {% if selected_status == "CANCELLED" %}selected{% endif %}>
-        CANCELLED
-      </option>
-    </select>
+        <option value="CANCELLED" {% if selected_status == "CANCELLED" %}selected{% endif %}>
+          CANCELLED
+        </option>
+      </select>
 
+    </div>
+  </div>
+
+  <div>
+    <label class="form-label">Filter by Department:</label>
+
+    <div class="d-flex gap-2">
+      <select class="form-select w-auto" name="department">
+        <option value="">All</option>
+
+        <option value="IT" {% if selected_department == "IT" %}selected{% endif %}>
+          IT
+        </option>
+
+        <option value="SALES" {% if selected_department == "SALES" %}selected{% endif %}>
+          Sales
+        </option>
+
+        <option value="HR" {% if selected_department == "HR" %}selected{% endif %}>
+          HR
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="align-self-end">
     <button class="btn btn-primary" type="submit">Apply</button>
   </div>
 </form>
+
 
 <!-- TABLE -->
  <div class="d-flex justify-content-between align-items-center mb-3">
@@ -54,6 +82,10 @@
         <td>{{ e.employee.full_name }}</td>
         <td>{{ e.session.course.title }}</td>
         <td>{{ e.status }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3" class="text-center text-muted">No enrollments found.</td>
       </tr>
       {% endfor %}
     </tbody>
