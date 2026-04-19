@@ -6,9 +6,6 @@ class Employee(models.Model):
         IT = "IT", "IT"
         HR = "HR", "HR"
         SALES = "SALES", "Sales"
-        FINANCE = "FINANCE", "Finance"
-        OPERATIONS = "OPERATIONS", "Operations"
-        MARKETING = "MARKETING", "Marketing"
 
     full_name = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
@@ -26,8 +23,6 @@ class Course(models.Model):
         TECHNICAL = "TECHNICAL", "Technical"
         SECURITY = "SECURITY", "Security"
         SOFT_SKILLS = "SOFT_SKILLS", "Soft Skills"
-        COMPLIANCE = "COMPLIANCE", "Compliance"
-        SAFETY = "SAFETY", "Safety"
 
     title = models.CharField(max_length=200)
     category = models.CharField(max_length=20, choices=Category.choices)

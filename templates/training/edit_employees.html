@@ -1,0 +1,50 @@
+{% extends "training/base.html" %} {% block content %}
+<h1>Edit Employee</h1>
+
+<form method="POST">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label for="title" class="form-label">Full Name:</label>
+    <input
+      type="text"
+      name="full_name"
+      id="full_name"
+      class="form-control"
+      value="{{ employee.full_name }}"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="email" class="form-label">email:</label>
+    <input
+      type="email"
+      name="email"
+      id="email"
+      class="form-control"
+      value="{{ employee.email }}"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="department" class="form-label">Department:</label>
+    <select name="department" id="department" class="form-select">
+      <option value="IT" {% if employee.department == "IT" %}selected{% endif %}>
+        IT
+      </option>
+      <option value="SALES" {% if employee.department == "SALES" %}selected{% endif %}>
+        Sales
+      </option>
+      <option value="HR" {% if employee.department == "HR" %}selected{% endif %}>
+        HR
+      </option>
+    </select>
+  </div>
+
+
+  <button class="btn btn-primary mt-3" type="submit">Save Changes</button>
+  <a href="{% url 'training:employees_list' %}" class="btn btn-outline-secondary mt-3"
+    >Cancel</a
+  >
+</form>
+{% endblock %}

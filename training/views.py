@@ -1,7 +1,8 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from .models import Enrollment, Employee, Session, Course
-from django.db import IntegrityError
 from django.contrib import messages
+from django.db.models import Count, Q
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .models import Course, Employee, Enrollment, Session
 
 # Handles creating a new enrollment:
 # - Displays form (GET)
@@ -84,23 +85,23 @@ def update_status(request, id):
 def analytics_dashboard(request):
     return render(request, "training/analytics.html")
 
-from django.db.models import Count, Q
-
 def course_popularity(request):
-    courses = (
-        Enrollment.objects
-        .values("session__course__title")
+    courses = list(
+        Course.objects
         .annotate(
-            total_enrollments=Count("id"),
-            completed_count=Count("id", filter=Q(status="COMPLETED"))
+            total_enrollments=Count("sessions__enrollments"),
+            completed_enrollments=Count(
+                "sessions__enrollments",
+                filter=Q(sessions__enrollments__status=Enrollment.Status.COMPLETED),
+            ),
         )
+        .order_by("-total_enrollments", "title")
     )
 
-    # calculate success rate
-    for c in courses:
-        total = c["total_enrollments"]
-        completed = c["completed_count"]
-        c["success_rate"] = round((completed / total) * 100, 1) if total > 0 else 0
+    for course in courses:
+        total = course.total_enrollments
+        completed = course.completed_enrollments
+        course.success_rate = round((completed / total) * 100, 1) if total > 0 else 0
 
     return render(request, "training/course_popularity.html", {
         "courses": courses
@@ -173,3 +174,70 @@ def delete_course(request, course_id):
         course.delete()
 
     return redirect("training:courses_list")
+
+# =========================
+# Employee Views
+# =========================
+
+def employees_list(request):
+    department = request.GET.get("department")
+    if department: 
+        employees = Employee.objects.filter(department=department)
+    else:
+        employees = Employee.objects.all()
+
+    return render(request, "training/employees.html", {
+        "employees": employees,
+        "selected_department": department
+    })
+
+def create_employee(request):
+        # If form is submitted (POST request), process the data
+    if request.method == "POST":
+        full_name = request.POST.get("full_name")
+        email = request.POST.get("email")
+        department = request.POST.get("department")
+
+        # Create a new Employee record in the database
+        # using the selected title, category, and duration
+        Employee.objects.create(
+            full_name=full_name,
+            email=email,
+            department=department
+        )
+
+        # After saving, redirect user to the employee list page
+        return redirect("training:employees_list")
+
+    # If page is accessed normally (GET request),
+    # load courses to populate dropdowns
+    employees = Employee.objects.all()
+
+    # Render the form and pass data to template
+    return render(request, "training/create_employee.html", {
+        "employees": employees
+    })
+
+
+def edit_employee(request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+
+    if request.method == "POST":
+        employee.full_name = request.POST.get("full_name")
+        employee.email = request.POST.get("email")
+        employee.department = request.POST.get("department")
+        employee.save()
+
+        return redirect("training:employees_list")
+
+    return render(request, "training/edit_employees.html", {
+        "employee": employee
+    })
+
+
+def delete_employee(request, employee_id):
+    if request.method == "POST":
+        course = get_object_or_404(Employee, id=employee_id)
+        course.delete()
+
+    return redirect("training:employees_list")
