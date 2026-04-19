@@ -309,3 +309,17 @@ def department_participation(request):
     return render(request, "training/department_participation.html", {
         "departments": departments
     })
+    
+# -------------------------
+# Enrollment per Session
+# -------------------------
+def enrollments_per_session(request):
+    sessions = (
+        Session.objects
+        .annotate(total_enrollments=Count("enrollments"))
+        .order_by("-total_enrollments")
+    )
+
+    return render(request, "training/enrollments_per_session.html", {
+        "sessions": sessions
+    })
