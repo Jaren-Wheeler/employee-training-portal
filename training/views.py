@@ -21,15 +21,20 @@ def home(request):
 # =========================
 def enrollment_list(request):
     status = request.GET.get("status")
-    
-    if status: 
-        enrollments = Enrollment.objects.filter(status=status)
-    else:
-        enrollments = Enrollment.objects.all()
-        
+    department = request.GET.get("department")
+
+    enrollments = Enrollment.objects.select_related("employee", "session__course")
+
+    if status:
+        enrollments = enrollments.filter(status=status)
+
+    if department:
+        enrollments = enrollments.filter(employee__department=department)
+
     return render(request, "training/enrollments.html", {
         "enrollments": enrollments,
-        "selected_status": status
+        "selected_status": status,
+        "selected_department": department,
     })
     
 # Enrollment Form View
